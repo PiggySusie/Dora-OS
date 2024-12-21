@@ -40,6 +40,8 @@ procinit(void)
       uint64 va = KSTACK((int) (p - proc));
       kvmmap(va, (uint64)pa, PGSIZE, PTE_R | PTE_W);
       p->kstack = va;
+      // ZZY 此处保证只映射自己的kstack
+      p->kstack_pa = (uint64)pa; 
   }
   kvminithart();
 }
@@ -112,6 +114,16 @@ found:
     release(&p->lock);
     return 0;
   }
+  // ZZY
+  p->k_pagetable = kvminit_for_each_process();// 为当前进程创建内核页表
+  if (p->k_pagetable == 0) {
+    freeproc(p);
+    release(&p->lock);
+    return 0;
+  }
+  // 将当前进程的内核栈地址范围映射到物理地址范围
+  kvmmap_for_each_process(p->k_pagetable, p->kstack, p->kstack_pa, PGSIZE, PTE_R | PTE_W);
+
 
   // An empty user page table.
   p->pagetable = proc_pagetable(p);
@@ -141,6 +153,10 @@ freeproc(struct proc *p)
   p->trapframe = 0;
   if(p->pagetable)
     proc_freepagetable(p->pagetable, p->sz);
+  // ZZY
+  if (p->k_pagetable) {
+    free_pagetable_except_for_leaf(p->k_pagetable);
+  }
   p->pagetable = 0;
   p->sz = 0;
   p->pid = 0;
@@ -220,7 +236,8 @@ userinit(void)
   // and data into it.
   uvminit(p->pagetable, initcode, sizeof(initcode));
   p->sz = PGSIZE;
-
+  //ZZY
+  sync_pagetable(p->pagetable, p->k_pagetable, 0, p->sz);
   // prepare for the very first "return" from kernel to user.
   p->trapframe->epc = 0;      // user program counter
   p->trapframe->sp = PGSIZE;  // user stack pointer
@@ -246,8 +263,11 @@ growproc(int n)
     if((sz = uvmalloc(p->pagetable, sz, sz + n)) == 0) {
       return -1;
     }
+    sync_pagetable(p->pagetable, p->k_pagetable, p->sz, p->sz + n);
   } else if(n < 0){
     sz = uvmdealloc(p->pagetable, sz, sz + n);
+    // ZZY 释放指定范围内的用户虚拟内存
+    uvmdealloc_u_in_k(p->k_pagetable, p->sz, p->sz + n);
   }
   p->sz = sz;
   return 0;
@@ -294,6 +314,8 @@ fork(void)
   pid = np->pid;
 
   np->state = RUNNABLE;
+  // ZZY 同步新进程的页表
+  sync_pagetable(np->pagetable, np->k_pagetable, 0, np->sz);
 
   release(&np->lock);
 
@@ -473,12 +495,16 @@ scheduler(void)
         // before jumping back to us.
         p->state = RUNNING;
         c->proc = p;
+        // ZZY
+        kvminithart_for_each_process(p->k_pagetable);
+
         swtch(&c->context, &p->context);
 
         // Process is done running for now.
         // It should have changed its p->state before coming back.
         c->proc = 0;
-
+        // ZZY
+        kvminithart();
         found = 1;
       }
       release(&p->lock);

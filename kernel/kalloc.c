@@ -23,11 +23,12 @@ struct {
   struct run *freelist;
 } kmem;
 
+// buddy-change
 void
 kinit()
 {
-  initlock(&kmem.lock, "kmem");
-  freerange(end, (void*)PHYSTOP);
+  char *p = (char *) PGROUNDUP((uint64) end);
+  buddy_init(p, (void*)PHYSTOP);
 }
 
 void
@@ -46,37 +47,23 @@ freerange(void *pa_start, void *pa_end)
 void
 kfree(void *pa)
 {
-  struct run *r;
-
-  if(((uint64)pa % PGSIZE) != 0 || (char*)pa < end || (uint64)pa >= PHYSTOP)
-    panic("kfree");
-
-  // Fill with junk to catch dangling refs.
-  memset(pa, 1, PGSIZE);
-
-  r = (struct run*)pa;
-
-  acquire(&kmem.lock);
-  r->next = kmem.freelist;
-  kmem.freelist = r;
-  release(&kmem.lock);
+  buddy_free(pa);
 }
 
 // Allocate one 4096-byte page of physical memory.
 // Returns a pointer that the kernel can use.
 // Returns 0 if the memory cannot be allocated.
+// buddy-change
 void *
 kalloc(void)
 {
-  struct run *r;
+  void *p;
+   // 请求一个页面的内存
+  p = buddy_malloc(PAGE_SIZE);
 
-  acquire(&kmem.lock);
-  r = kmem.freelist;
-  if(r)
-    kmem.freelist = r->next;
-  release(&kmem.lock);
+  if (p) {
+    memset(p, 0, PAGE_SIZE);  // 清零分配的内存
+  }
 
-  if(r)
-    memset((char*)r, 5, PGSIZE); // fill with junk
-  return (void*)r;
+  return p;
 }
