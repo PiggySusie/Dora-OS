@@ -24,7 +24,112 @@ static struct {
 } pr;
 
 static char digits[] = "0123456789abcdef";
+static void printint(int xx, int base, int sign, int width)
+{
+    char buf[16];
+    int i;
+    uint x;
 
+    if (sign && (sign = xx < 0))
+        x = -xx;
+    else
+        x = xx;
+
+    i = 0;
+    do {
+        buf[i++] = digits[x % base];
+    } while ((x /= base) != 0);
+
+    if (sign)
+        buf[i++] = '-';
+
+    // Apply width by padding with spaces
+    int padding = width - i;
+    while (padding-- > 0) {
+        consputc(' ');  // Padding with spaces
+    }
+
+    while (--i >= 0)
+        consputc(buf[i]);
+}
+
+static void
+printptr(uint64 x)
+{
+  int i;
+  consputc('0');
+  consputc('x');
+  for (i = 0; i < (sizeof(uint64) * 2); i++, x <<= 4)
+    consputc(digits[x >> (sizeof(uint64) * 8 - 4)]);
+}
+
+void printf(char *fmt, ...)
+{
+    va_list ap;
+    int i, c, locking, width;
+    char *s;
+
+    locking = pr.locking;
+    if (locking)
+        acquire(&pr.lock);
+
+    if (fmt == 0)
+        panic("null fmt");
+
+    va_start(ap, fmt);
+    for (i = 0; (c = fmt[i] & 0xff) != 0; i++) {
+        if (c != '%') {
+            consputc(c);
+            continue;
+        }
+        c = fmt[++i] & 0xff;
+        if (c == 0)
+            break;
+
+        // Handle width, if any
+        width = 0;
+        if (c >= '0' && c <= '9') {
+            // Parse width number
+            while (fmt[i] >= '0' && fmt[i] <= '9') {
+                width = width * 10 + (fmt[i] - '0');
+                i++;
+            }
+            c = fmt[i] & 0xff;  // Recheck the character after number
+        }
+
+        switch (c) {
+            case 'd':
+                printint(va_arg(ap, int), 10, 1, width);
+                break;
+            case 'x':
+                printint(va_arg(ap, int), 16, 1, width);
+                break;
+            case 'p':
+                printptr(va_arg(ap, uint64));
+                break;
+            case 's':
+                if ((s = va_arg(ap, char*)) == 0)
+                    s = "(null)";
+                for (; *s; s++)
+                    consputc(*s);
+                break;
+            case '%':
+                consputc('%');
+                break;
+            default:
+                // Print unknown % sequence to draw attention.
+                consputc('%');
+                consputc(c);
+                break;
+        }
+    }
+
+    if (locking)
+        release(&pr.lock);
+}
+
+//end printf
+/*
 static void
 printint(int xx, int base, int sign)
 {
@@ -113,6 +218,7 @@ printf(char *fmt, ...)
   if(locking)
     release(&pr.lock);
 }
+*/
 
 void
 panic(char *s)

@@ -40,11 +40,3 @@ lst_push(struct list_node *lst, void *p)
   lst->next->prev = p;
   lst->next = e;
 }
-
-// void lst_print(struct list_node *lst) {
-//     for (struct list_node *p = lst->next; p != lst; p = p->next) {
-//         printf(" %p", p->data);
-//     }
-//     printf("\n");
-// }
-
