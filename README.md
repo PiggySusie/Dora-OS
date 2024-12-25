@@ -77,16 +77,6 @@
 
 - 实验指导书PDF文档：[基于伙伴分配算法的内存管理系统-实验指导书](<https://gitlab.eduxiji.net/T202410269994414/project2608132-274517/-/blob/main/%E5%9F%BA%E4%BA%8E%E4%BC%99%E4%BC%B4%E5%88%86%E9%85%8D%E7%AE%97%E6%B3%95%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F-%E5%AE%9E%E9%AA%8C%E6%8C%87%E5%AF%BC%E4%B9%A6.pdf>)
 
-  - `xv6-buddy_text`：实验题目文件。
-
-  - `xv6-buddy_answer`：实验完整答案文件。
-
-  - `xv6-print-without-buddy`：对于`xv6`内存分配的输出验证性文件。
-
-  - `xv6-print-with-buddy`：对于添加伙伴分配器以后的输出验证性文件。
-
-    
-
 - 实验过程性材料：
 
   - 实验题目的完整工程文件：[xv6-buddy_text](<https://gitlab.eduxiji.net/T202410269994414/project2608132-274517/-/tree/main/xv6-buddy_text>)
@@ -96,7 +86,6 @@
   
 - 所有材料的压缩文件：[zip](<https://gitlab.eduxiji.net/T202410269994414/project2608132-274517/-/tree/main/Experimental%20Process%20Materials-zip>)
 
-  
   
   
 
