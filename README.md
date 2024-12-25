@@ -116,7 +116,7 @@
 
    以下以`buddy-answer`分支为例。
 
-3. **创建并切换到本地分支 `buddy-answer`**：
+3. **切换到本地分支 `buddy-answer`**：
 
    ```bash
    git checkout buddy-answer
