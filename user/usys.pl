@@ -36,3 +36,7 @@ entry("getpid");
 entry("sbrk");
 entry("sleep");
 entry("uptime");
+# buddy_add
+entry("buddy_free");
+entry("buddy_malloc");
+

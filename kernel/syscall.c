@@ -104,6 +104,9 @@ extern uint64 sys_unlink(void);
 extern uint64 sys_wait(void);
 extern uint64 sys_write(void);
 extern uint64 sys_uptime(void);
+// buddy_add
+extern uint64 sys_buddy_free(void);
+extern uint64 sys_buddy_malloc(void);
 
 static uint64 (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -127,6 +130,9 @@ static uint64 (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
+// buddy_add
+[SYS_buddy_free]    sys_buddy_free,  
+[SYS_buddy_malloc]   sys_buddy_malloc,
 };
 
 void
