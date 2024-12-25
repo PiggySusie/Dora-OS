@@ -1,0 +1,26 @@
+#!/usr/bin/env python
+
+import re
+from gradelib import *
+
+r = Runner(save("xv6.out"))
+
+@test(80, "buddytests")
+def test_combinedtests():
+    r.run_qemu(shell_script([
+        'buddytests' 
+    ]))
+    r.match(r"Allocated memory at 0x[0-9a-f]+") 
+    r.match(r"Freed memory at 0x[0-9a-f]+") 
+    r.match("^buddytest: OK$")
+
+    r.match("^optimaltest: OK$")
+
+@test(20, "usertests")
+def test_usertests():
+    r.run_qemu(shell_script([
+        'usertests'
+    ]), timeout=150)
+    r.match('^ALL TESTS PASSED$')
+
+run_tests()
