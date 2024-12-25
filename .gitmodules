@@ -1,3 +1,12 @@
 [submodule "xv6-labs-2020-buddy_answer"]
 	path = xv6-labs-2020-buddy_answer
 	url = git://g.csail.mit.edu/xv6-labs-2020
+[submodule "xv6-labs-2020-buddy_text"]
+	path = xv6-labs-2020-buddy_text
+	url = git://g.csail.mit.edu/xv6-labs-2020
+[submodule "xv6-labs-2020-print-with-buddy"]
+	path = xv6-labs-2020-print-with-buddy
+	url = git://g.csail.mit.edu/xv6-labs-2020
+[submodule "xv6-labs-2020-print-without-buddy"]
+	path = xv6-labs-2020-print-without-buddy
+	url = git://g.csail.mit.edu/xv6-labs-2020
