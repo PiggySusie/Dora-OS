@@ -41,7 +41,7 @@
 - **内存初始化与管理**：实现了`buddy_init`函数，用于初始化内存管理系统，包括计算内存大小、初始化空闲链表、分配管理结构和标记已使用区域。
 - **空闲链表的管理**：通过双向链表来动态地管理内存块的分配和释放，提高了内存分配和释放的效率。
 - **内存碎片统计**：编写了`buddy_fragmentation_statistics`函数，用于统计并输出内存碎片信息，包括每种大小的空闲块数量及其占用的总内存等。
-- **进一步优化：**利用一个比特位表示一对 `buddy` 内存块的状态，以节省内存，提升内存利用率。
+- **进一步优化**：利用一个比特位表示一对 `buddy` 内存块的状态，以节省内存，提升内存利用率。
 
 ## 4、实验过程概述
 
@@ -56,7 +56,7 @@
    - 实现了`buddy_free`函数，用于释放内存块并进行合并操作。
 5. **测试与验证**：
    - 通过运行`buddytests`测试，验证了伙伴分配器的基本功能和性能。
-   - 优化了伙伴分配器，使用XOR操作来判断buddy块的状态，进一步节省了内存。
+   - 优化了伙伴分配器，使用`XOR`操作来判断`buddy`块的状态，进一步节省了内存。
 
 
 
@@ -83,7 +83,53 @@
   - `xv6`原内存分配的输出验证性文件：[print-without-buddy分支](<https://gitlab.eduxiji.net/T202410269994414/project2608132-274517/-/tree/print-without-buddy?ref_type=heads>)
   - 添加伙伴分配器后内存分配的输出验证性文件：[print-with-buddy分支](<https://gitlab.eduxiji.net/T202410269994414/project2608132-274517/-/tree/print-with-buddy?ref_type=heads>)
 
-## 7、参考资料
+
+
+## 7、测试方法
+
+1. **克隆远程仓库**：
+
+   ```bash
+   git clone https://gitlab.eduxiji.net/T202410269994414/project2608132-274517.git
+   
+   cd project2608132-274517
+   ```
+
+   以下操作均在project2608132-274517文件夹下进行。
+
+2. **查看所有远程分支**：
+
+   ```bash
+   git branch -r
+   ```
+
+   这将列出所有远程分支，应该会看到类似以下的输出：
+
+   ```
+    origin/HEAD -> origin/main
+     origin/buddy-answer
+     origin/buddy-text
+     origin/main
+     origin/print-with-buddy
+     origin/print-without-buddy
+   ```
+
+   以下以`buddy-answer`分支为例。
+
+3. **创建并切换到本地分支 `buddy-answer`**：
+
+   ```bash
+   git checkout buddy-answer
+   ```
+
+4. **在此分支下进行测试，包括：**
+
+   - make qemu
+   - buddytests
+   - usertests
+   - grade-lab-buddy
+
+## 8、参考资料
 
 [1]（美）AbrahamSilberschatz，（美）PeterBaerGalvin，（美）格雷格·加涅.操作系统概念原书  第10版[M].北京：机械工业出版社,2023
 
