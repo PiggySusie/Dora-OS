@@ -105,7 +105,7 @@
 
    这将列出所有远程分支，应该会看到类似以下的输出：
 
-   ```
+   ```bash
     origin/HEAD -> origin/main
      origin/buddy-answer
      origin/buddy-text
@@ -116,10 +116,10 @@
 
    以下以`buddy-answer`分支为例。
 
-3. **切换到本地分支 `buddy-answer`**：
+3. **创建并切换到本地分支 `buddy-answer`**：
 
    ```bash
-   git checkout buddy-answer
+   git checkout -b buddy-answer origin/buddy-answer
    ```
 
 4. **在此分支下进行测试，包括：**
