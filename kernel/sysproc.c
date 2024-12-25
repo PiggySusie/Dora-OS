@@ -95,3 +95,24 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+// buddy_add
+uint64
+sys_buddy_free(void) {
+  char pa[128]; 
+  if (argstr(0, pa, sizeof(pa)) < 0) { 
+    return -1; 
+  }
+  buddy_free(pa); 
+  return 0; 
+}
+uint64
+sys_buddy_malloc(void) {
+  uint64 nbytes;
+
+  if(argaddr(0, &nbytes) < 0)
+    return -1;
+  return (uint64) buddy_malloc(nbytes);
+}
+
+
+

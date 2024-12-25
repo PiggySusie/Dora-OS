@@ -58,11 +58,10 @@ void *
 kalloc(void)
 {
   void *p;
-   // 请求一个页面的内存
-  p = buddy_malloc(PAGE_SIZE);
+  p = buddy_malloc(PGSIZE);
 
   if (p) {
-    memset(p, 0, PAGE_SIZE);  // 清零分配的内存
+    memset(p, 0, PGSIZE);  // 清零分配的内存
   }
 
   return p;

@@ -24,6 +24,9 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+// buddy_add
+int buddy_free(void*);   
+void* buddy_malloc(void); 
 #ifdef LAB_NET
 int connect(uint32, uint16, uint16);
 #endif

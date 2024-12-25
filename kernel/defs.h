@@ -178,24 +178,6 @@ uint64          walkaddr(pagetable_t, uint64);
 int             copyout(pagetable_t, uint64, char *, uint64);
 int             copyin(pagetable_t, char *, uint64, uint64);
 int             copyinstr(pagetable_t, char *, uint64, uint64);
-// ZZY
-void            vmprint(pagetable_t);
-pagetable_t     kvminit_for_each_process(void);
-void            kvmmap_for_each_process(pagetable_t, uint64, uint64, uint64, int);
-void            kvminithart_for_each_process(pagetable_t);
-void            free_pagetable_except_for_leaf(pagetable_t);
-int  sync_pagetable(pagetable_t, pagetable_t, uint64, uint64);
-int             copyin_new(pagetable_t, char*, uint64, uint64);
-int             copyinstr_new(pagetable_t, char*, uint64, uint64);
-uint64          uvmdealloc_u_in_k(pagetable_t, uint64, uint64);
-pagetable_t     kvminit_for_each_process(void);
-void            kvmmap_for_each_process(pagetable_t, uint64, uint64, uint64, int);
-void            free_pagetable_except_for_leaf(pagetable_t);
-int  sync_pagetable(pagetable_t, pagetable_t, uint64, uint64);
-int             copyin_new(pagetable_t, char*, uint64, uint64);
-int             copyinstr_new(pagetable_t, char*, uint64, uint64);
-uint64          uvmdealloc_u_in_k(pagetable_t, uint64, uint64);
-
 // plic.c
 void            plicinit(void);
 void            plicinithart(void);
@@ -210,15 +192,12 @@ void            virtio_disk_intr(void);
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
 
-// buddy_change
 // buddy.c
-#define PAGE_SIZE 4096 // 4KB
 
 void           buddy_init(void*,void*);
 void           buddy_free(void*);
 void           *buddy_malloc(uint64);
 
-// 双向循环链表的节点结构
 struct list_node {
     struct list_node *next;
     struct list_node *prev;
@@ -230,7 +209,6 @@ void lst_init(struct list_node*);
 void lst_remove(struct list_node*);
 void lst_push(struct list_node*, void *);
 void *lst_pop(struct list_node*);
-// void lst_print(struct list_node*);
 int lst_empty(struct list_node*);
 
 
